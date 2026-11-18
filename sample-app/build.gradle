@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '4.1.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1'
+
+repositories { mavenCentral() }
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+
+// -PprovidedTomcat builds the second variant: the embedded Tomcat is declared providedRuntime, as it is
+// for a WAR that must also deploy to an external servlet container. Spring Boot then packages those jars
+// in WEB-INF/lib-provided/ instead of WEB-INF/lib/ (see 04-executable-war).
+def providedTomcat = project.hasProperty('providedTomcat')
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    if (providedTomcat) {
+        providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    }
+}
+
+bootWar {
+    archiveFileName = providedTomcat ? 'sample-app-provided.war' : 'sample-app.war'
+}

@@ -1,0 +1,41 @@
+Building the client image (gemfire/gemfire:10.3.2-jdk17 jars, client compiled against them) ...
+Starting a GemFire cluster (1 locator, 1 server, region 'demo') ...
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), aarch64
+
+== 1. No AOT cache, against the live cluster
+    operations:              worked
+    client:                  cacheCreate=782ms operations=99ms  operations OK, read back name7
+    GemFire classes:         2511 loaded
+
+== 2. Cache trained against the live cluster
+    training:                cache written
+    training run:            cacheCreate=788ms operations=35ms  operations OK, read back name7
+    cache size:              65 MB
+    cache:                   used
+    operations:              worked
+    client:                  cacheCreate=290ms operations=38ms  operations OK, read back name7
+    GemFire classes:         2555 of 2555 from the cache
+    all classes:             7579 of 7838 from the cache
+
+== 3. Cache trained with no cluster reachable, then used against the live cluster
+    training:                cache written
+    training run:            operations failed
+                             cacheCreate=808ms operations=0ms  operations FAILED: NoSubscriptionServersAvailableException
+    cache size:              64 MB
+    cache:                   used
+    operations:              worked
+    client:                  cacheCreate=321ms operations=46ms  operations OK, read back name7
+    GemFire classes:         2405 of 2559 from the cache
+    all classes:             7403 of 7840 from the cache
+
+== 4. Startup time against the live cluster: median of 5 runs
+    no cache:                ClientCache and region creation 747 ms, whole JVM 810 ms
+    cache, live training:    ClientCache and region creation 313 ms, whole JVM 398 ms
+    cache, blind training:   ClientCache and region creation 316 ms, whole JVM 426 ms
+
+== 5. Training the client at different class-space sizes (no cluster needed)
+    40M:                     no cache written: Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+    48M:                     no cache written: Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+    64M:                     cache written
+
+All outcomes match our run.

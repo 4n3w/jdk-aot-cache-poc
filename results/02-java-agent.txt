@@ -1,0 +1,81 @@
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), aarch64
+
+== 1. No cache: the agent sees every application class as it loads
+      [agent] started: 984 classes already loaded, 0 of them demo.*
+      [agent] hook offered demo.Main at load time
+      [agent] hook offered demo.Helper at load time
+      [agent] hook offered demo.Service at load time
+      [agent] exit: the hook was offered 38 classes at load time, 0 by retransformation
+    loaded before agent:     0 demo.* classes
+    offered at load time:    3 demo.* classes
+
+== 2. Cache trained with the agent, production with the agent
+      [agent] started: 1091 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] exit: the hook was offered 1 classes at load time, 0 by retransformation
+    loaded before agent:     4 demo.* classes
+    offered at load time:    0 demo.* classes
+    classes from cache:      928 of 946
+
+== 3. The same cache, and the agent retransforms the classes it missed
+      [agent] started: 1092 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] retransforming 3 classes that were loaded before the agent started
+      [agent] hook offered demo.Helper by retransformation
+      [agent] hook offered demo.Service by retransformation
+      [agent] hook rewrote demo.Service
+      [agent] hook offered demo.Main by retransformation
+      [agent] exit: the hook was offered 1 classes at load time, 3 by retransformation
+    offered again:           3 demo.* classes
+    rewritten:               1 class
+    application:             1 run completed
+
+== 4. The agent rewrites demo.Service during training as well as in production
+    Training run, what the JVM left out of the cache because of the agent:
+      Skipping demo/Service: From ClassFileLoadHook
+    left out of cache:       1 class
+    Production run:
+      [agent] started: 1090 classes already loaded, 3 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] hook offered demo.Service at load time
+      [agent] hook rewrote demo.Service
+      [agent] exit: the hook was offered 2 classes at load time, 0 by retransformation
+    loaded before agent:     3 demo.* classes
+    offered at load time:    1 demo.* classes
+    rewritten:               1 class
+
+== 5. Cache trained without the agent (--add-modules=java.instrument), production with it
+    cache:                   used
+      [agent] started: 1087 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000022
+      [agent]   loaded before the agent started: demo.Main
+      [agent] exit: the hook was offered 4 classes at load time, 0 by retransformation
+    loaded before agent:     4 demo.* classes
+    offered at load time:    0 demo.* classes
+
+== 6. The agent appends a jar to the bootstrap class path
+      [agent] appended /opt/agent/agent-boot.jar to the bootstrap class path
+      [agent] started: 1091 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] exit: the hook was offered 1 classes at load time, 0 by retransformation
+    JVM output:
+      Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+    cache:                   used
+    loaded before agent:     4 demo.* classes
+    application:             1 run completed
+    classes from cache:      928 of 946
+
+All outcomes match our run.

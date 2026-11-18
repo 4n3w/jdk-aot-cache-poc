@@ -1,0 +1,37 @@
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), aarch64
+
+== Training the sample Spring Boot application at different class-space sizes
+
+  -XX:CompressedClassSpaceSize=40M
+    training:                no cache written
+    exit code:               1
+    JVM:                     Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+
+  -XX:CompressedClassSpaceSize=48M
+    training:                no cache written
+    exit code:               1
+    JVM:                     Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+
+  -XX:CompressedClassSpaceSize=64M
+    training:                cache written
+    cache size:              54 MB
+
+  no -XX:CompressedClassSpaceSize option (the default is 1 GB)
+    training:                cache written
+    cache size:              54 MB
+
+== Production with the full memory option set, cache trained without the option
+    production options:      -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M
+    cache:                   used
+    classes from cache:      7608 of 7894
+    JVM:                     CompressedClassSpaceSize adjusted from user input 41943040 bytes to 50331648 bytes
+
+== Native memory at exit with the production memory options (NMT summary, committed MB)
+                            without cache     with cache
+    Metaspace                        26.9            2.7
+    Shared class space               13.7           51.2
+    Total                          1146.0         1138.8
+    Metaspace holds class metadata the JVM builds at runtime. Shared class space is the mapped cache file.
+    Metaspace with cache:    lower
+
+All outcomes match our run.

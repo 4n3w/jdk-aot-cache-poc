@@ -1,0 +1,33 @@
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), aarch64
+
+== The two sample WARs
+    sample-app.war:          42 jars in WEB-INF/lib/, 0 in WEB-INF/lib-provided/
+    sample-app-provided.war: 17 jars in WEB-INF/lib/, 24 in WEB-INF/lib-provided/
+
+== 1. Packed: java -jar sample-app.war, trained and run as it is
+    training:                cache written
+    cache size:              52 MB
+    cache:                   used
+    classes from cache:      6052 of 7355
+      from the WAR:          3033 of 3886 (Spring, Tomcat, Jackson, application)
+
+== 2. Spring Boot's extract command: java -Djarmode=tools -jar <war> extract --destination <dir>
+    sample-app.war:          extracted
+      result:                sample-app.war (2049 bytes, a launcher) and lib/ with 41 jars
+    sample-app-provided.war: extract failed
+      Spring Boot:           Invalid library location WEB-INF/lib-provided/spring-boot-tomcat-4.1.1.jar
+
+== 3. Extracted: java -jar <dir>/sample-app.war, trained and run from the extracted layout
+    training:                cache written
+    cache size:              55 MB
+    cache:                   used
+    classes from cache:      7660 of 7941
+      from the WAR:          4363 of 4396 (Spring, Tomcat, Jackson, application)
+
+== 4. Unzipped by hand, with directories on the class path
+    command:                 java -cp WEB-INF/classes:WEB-INF/lib/* com.example.sample.SampleApplication
+    training:                no cache written
+    JVM:                     Error: non-empty directory '/tmp/aot-poc/unzipped/WEB-INF/classes'
+                             Cannot have non-empty directory in paths
+
+All outcomes match our run.

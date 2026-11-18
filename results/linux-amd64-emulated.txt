@@ -1,0 +1,404 @@
+
+######## make 01
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), x86_64
+
+== Options that open modules or allow native access: the set has to match
+
+ 1. --add-opens: same set in both runs
+    training options:        --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED
+    production options:      --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED
+    cache:                   used
+    classes from cache:      900 of 901
+
+ 2. --add-opens: same set, different order
+    training options:        --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED
+    production options:      --add-opens=java.sql/java.sql=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED
+    cache:                   used
+    classes from cache:      900 of 901
+
+ 3. --add-opens: in the training run only
+    training options:        --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED
+    production options:      (none)
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addopens: java.base/java.lang=ALL-UNNAMED,java.base/java.net=ALL-UNNAMED,java.sql/java.sql=ALL-UNNAMED specified during dump time but not during runtime
+
+ 4. --add-opens: in the production run only
+    training options:        (none)
+    production options:      --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addopens: java.base/java.lang=ALL-UNNAMED,java.base/java.net=ALL-UNNAMED,java.sql/java.sql=ALL-UNNAMED specified during runtime but not during dump time
+
+ 5. --add-opens: one more in the production run
+    training options:        --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED
+    production options:      --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addopens: runtime java.base/java.lang=ALL-UNNAMED,java.base/java.net=ALL-UNNAMED,java.base/java.nio=ALL-UNNAMED,java.sql/java.sql=ALL-UNNAMED dump time java.base/java.lang=ALL-UNNAMED,java.base/java.net=ALL-UNNAMED,java.sql/java.sql=ALL-UNNAMED
+
+ 6. --enable-native-access: in both runs
+    training options:        --enable-native-access=ALL-UNNAMED
+    production options:      --enable-native-access=ALL-UNNAMED
+    cache:                   used
+    classes from cache:      890 of 891
+
+ 7. --enable-native-access: in the production run only
+    training options:        (none)
+    production options:      --enable-native-access=ALL-UNNAMED
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.enable.native.access: ALL-UNNAMED specified during runtime but not during dump time
+
+== Options that add a JDK module behind the scenes: the added modules have to match
+
+ 8. -javaagent: in both runs
+    training options:        -javaagent:/opt/agent/agent.jar
+    production options:      -javaagent:/opt/agent/agent.jar
+    cache:                   used
+    classes from cache:      928 of 946
+
+ 9. -javaagent: in the production run only
+    training options:        (none)
+    production options:      -javaagent:/opt/agent/agent.jar
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: java.instrument specified during runtime but not during dump time
+
+10. -javaagent: in the training run only
+    training options:        -javaagent:/opt/agent/agent.jar
+    production options:      (none)
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: java.instrument specified during dump time but not during runtime
+
+11. --add-modules=java.instrument in training stands in for -javaagent
+    training options:        --add-modules=java.instrument
+    production options:      -javaagent:/opt/agent/agent.jar
+    cache:                   used
+    classes from cache:      917 of 946
+
+12. -Dcom.sun.management.jmxremote: in the production run only
+    training options:        (none)
+    production options:      -Dcom.sun.management.jmxremote
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: jdk.management.agent specified during runtime but not during dump time
+
+13. -Dcom.sun.management.jmxremote: in the training run only
+    training options:        -Dcom.sun.management.jmxremote
+    production options:      (none)
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: jdk.management.agent specified during dump time but not during runtime
+
+14. -Dcom.sun.management with nothing after it: in the production run only
+    training options:        (none)
+    production options:      -Dcom.sun.management
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: jdk.management.agent specified during runtime but not during dump time
+
+15. --add-modules in training stands in for -javaagent and -Dcom.sun.management
+    training options:        --add-modules=java.instrument,jdk.management.agent
+    production options:      -javaagent:/opt/agent/agent.jar -Dcom.sun.management
+    cache:                   used
+    classes from cache:      918 of 948
+
+== Options that do not have to match
+
+16. --sun-misc-unsafe-memory-access: in the production run only
+    training options:        (none)
+    production options:      --sun-misc-unsafe-memory-access=allow
+    cache:                   used
+    classes from cache:      890 of 891
+
+17. Production memory and GC options against training defaults
+    training options:        (none)
+    production options:      -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M
+    cache:                   used
+    classes from cache:      890 of 891
+
+18. Ordinary -D system properties: in the production run only
+    training options:        (none)
+    production options:      -Djdk.nio.maxCachedBufferSize=100000 -Dnetworkaddress.cache.ttl=300 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC
+    cache:                   used
+    classes from cache:      890 of 891
+
+19. Serial GC in training, G1 in production
+    training options:        -XX:+UseSerialGC
+    production options:      -XX:+UseG1GC
+    cache:                   used
+    classes from cache:      890 of 891
+
+20. G1 in training, Serial GC in production
+    training options:        -XX:+UseG1GC
+    production options:      -XX:+UseSerialGC
+    cache:                   used
+    classes from cache:      890 of 891
+
+21. Training sized like a small build runner (1 CPU, 256 MB heap)
+    training options:        -XX:ActiveProcessorCount=1 -Xmx256m
+    production options:      -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M
+    cache:                   used
+    classes from cache:      890 of 891
+
+== Heap size: matters only when one run is above 32 GB and the other is not
+
+22. Training heap of 40 GB (what an unset -Xmx becomes on a large build host), production heap below 1 GB
+    training options:        -Xmx40g
+    production options:      -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M
+    cache:                   rejected
+    JVM:                     The saved state of UseCompressedOops and UseCompressedClassPointers is different from runtime, CDS will be disabled.
+
+== The application archive has to be the file the cache was trained on
+
+23. Archive timestamp changed after training
+    training options:        (none)
+    production options:      (none)
+    after training:          touch -d 2020-01-01 /tmp/aot-poc/build/app.jar
+    cache:                   rejected
+    JVM:                     This file is not the one used while building the AOT cache: '/tmp/aot-poc/build/app.jar', timestamp has changed
+
+24. Archive rebuilt after training (one more entry)
+    training options:        (none)
+    production options:      (none)
+    after training:          jar --update --file /tmp/aot-poc/build/app.jar -C /tmp/aot-poc extra.txt
+    cache:                   rejected
+    JVM:                     This file is not the one used while building the AOT cache: '/tmp/aot-poc/build/app.jar', timestamp has changed, size has changed
+
+25. Same archive run from another directory, file name and timestamp kept
+    training options:        (none)
+    production options:      (none)
+    after training:          cp -p /tmp/aot-poc/build/app.jar /tmp/aot-poc/deploy/app.jar
+    cache:                   used
+    classes from cache:      890 of 891
+
+26. Same archive run under another file name
+    training options:        (none)
+    production options:      (none)
+    after training:          cp -p /tmp/aot-poc/build/app.jar /tmp/aot-poc/deploy/renamed.jar
+    cache:                   rejected
+    JVM:                     The name of app classpath [1] does not match: expected '/tmp/aot-poc/deploy/app.jar', got '/tmp/aot-poc/deploy/renamed.jar'
+
+== A rejected cache in the default mode (no -XX:AOTMode=on)
+    The cache was trained without --add-opens and production passes them, as in case 4.
+    exit code:               0
+    application:             1 run completed
+    JVM output:
+      [0.038s][error][aot] An error has occurred while processing the AOT cache. Run with -Xlog:aot for details.
+      [0.039s][error][aot] Mismatched values for property jdk.module.addopens: java.base/java.lang=ALL-UNNAMED,java.base/java.net=ALL-UNNAMED,java.sql/java.sql=ALL-UNNAMED specified during runtime but not during dump time
+      [0.039s][error][aot] Disabling optimized module handling
+      [0.039s][error][aot] AOT cache has aot-linked classes. It cannot be used when archived full module graph is not used.
+      [0.040s][error][aot] Unable to map shared spaces
+    Classes loaded from an archive, out of all classes loaded:
+      cache accepted:        890 of 891
+      cache rejected:        0 of 851
+      no AOT option:         821 of 844 (from the JDK's built-in archive)
+
+All outcomes match our run.
+
+######## make 02
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), x86_64
+
+== 1. No cache: the agent sees every application class as it loads
+      [agent] started: 983 classes already loaded, 0 of them demo.*
+      [agent] hook offered demo.Main at load time
+      [agent] hook offered demo.Helper at load time
+      [agent] hook offered demo.Service at load time
+      [agent] exit: the hook was offered 38 classes at load time, 0 by retransformation
+    loaded before agent:     0 demo.* classes
+    offered at load time:    3 demo.* classes
+
+== 2. Cache trained with the agent, production with the agent
+      [agent] started: 1091 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] exit: the hook was offered 1 classes at load time, 0 by retransformation
+    loaded before agent:     4 demo.* classes
+    offered at load time:    0 demo.* classes
+    classes from cache:      928 of 946
+
+== 3. The same cache, and the agent retransforms the classes it missed
+      [agent] started: 1092 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] retransforming 3 classes that were loaded before the agent started
+      [agent] hook offered demo.Helper by retransformation
+      [agent] hook offered demo.Service by retransformation
+      [agent] hook rewrote demo.Service
+      [agent] hook offered demo.Main by retransformation
+      [agent] exit: the hook was offered 1 classes at load time, 3 by retransformation
+    offered again:           3 demo.* classes
+    rewritten:               1 class
+    application:             1 run completed
+
+== 4. The agent rewrites demo.Service during training as well as in production
+    Training run, what the JVM left out of the cache because of the agent:
+      Skipping demo/Service: From ClassFileLoadHook
+    left out of cache:       1 class
+    Production run:
+      [agent] started: 1090 classes already loaded, 3 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] hook offered demo.Service at load time
+      [agent] hook rewrote demo.Service
+      [agent] exit: the hook was offered 2 classes at load time, 0 by retransformation
+    loaded before agent:     3 demo.* classes
+    offered at load time:    1 demo.* classes
+    rewritten:               1 class
+
+== 5. Cache trained without the agent (--add-modules=java.instrument), production with it
+    cache:                   used
+      [agent] started: 1087 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000022
+      [agent]   loaded before the agent started: demo.Main
+      [agent] exit: the hook was offered 4 classes at load time, 0 by retransformation
+    loaded before agent:     4 demo.* classes
+    offered at load time:    0 demo.* classes
+
+== 6. The agent appends a jar to the bootstrap class path
+      [agent] appended /opt/agent/agent-boot.jar to the bootstrap class path
+      [agent] started: 1091 classes already loaded, 4 of them demo.*
+      [agent]   loaded before the agent started: demo.Helper
+      [agent]   loaded before the agent started: demo.Service
+      [agent]   loaded before the agent started: demo.Main$$Lambda/0x800000023
+      [agent]   loaded before the agent started: demo.Main
+      [agent] exit: the hook was offered 1 classes at load time, 0 by retransformation
+    JVM output:
+      Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+    cache:                   used
+    loaded before agent:     4 demo.* classes
+    application:             1 run completed
+    classes from cache:      928 of 946
+
+All outcomes match our run.
+
+######## make 03
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), x86_64
+
+== Training the sample Spring Boot application at different class-space sizes
+
+  -XX:CompressedClassSpaceSize=40M
+    training:                no cache written
+    exit code:               1
+    JVM:                     Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+
+  -XX:CompressedClassSpaceSize=48M
+    training:                no cache written
+    exit code:               1
+    JVM:                     Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+
+  -XX:CompressedClassSpaceSize=64M
+    training:                cache written
+    cache size:              55 MB
+
+  no -XX:CompressedClassSpaceSize option (the default is 1 GB)
+    training:                cache written
+    cache size:              55 MB
+
+== Production with the full memory option set, cache trained without the option
+    production options:      -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M
+    cache:                   used
+    classes from cache:      7648 of 7939
+    JVM:                     CompressedClassSpaceSize adjusted from user input 41943040 bytes to 50331648 bytes
+
+== Native memory at exit with the production memory options (NMT summary, committed MB)
+                            without cache     with cache
+    Metaspace                        27.0            2.8
+    Shared class space               13.6           51.4
+    Total                          1153.3         1163.0
+    Metaspace holds class metadata the JVM builds at runtime. Shared class space is the mapped cache file.
+    Metaspace with cache:    lower
+
+All outcomes match our run.
+
+######## make 04
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), x86_64
+
+== The two sample WARs
+    sample-app.war:          42 jars in WEB-INF/lib/, 0 in WEB-INF/lib-provided/
+    sample-app-provided.war: 17 jars in WEB-INF/lib/, 24 in WEB-INF/lib-provided/
+
+== 1. Packed: java -jar sample-app.war, trained and run as it is
+    training:                cache written
+    cache size:              52 MB
+    cache:                   used
+    classes from cache:      6062 of 7365
+      from the WAR:          3033 of 3886 (Spring, Tomcat, Jackson, application)
+
+== 2. Spring Boot's extract command: java -Djarmode=tools -jar <war> extract --destination <dir>
+    sample-app.war:          extracted
+      result:                sample-app.war (2049 bytes, a launcher) and lib/ with 41 jars
+    sample-app-provided.war: extract failed
+      Spring Boot:           Invalid library location WEB-INF/lib-provided/spring-boot-tomcat-4.1.1.jar
+
+== 3. Extracted: java -jar <dir>/sample-app.war, trained and run from the extracted layout
+    training:                cache written
+    cache size:              55 MB
+    cache:                   used
+    classes from cache:      7638 of 7919
+      from the WAR:          4363 of 4396 (Spring, Tomcat, Jackson, application)
+
+== 4. Unzipped by hand, with directories on the class path
+    command:                 java -cp WEB-INF/classes:WEB-INF/lib/* com.example.sample.SampleApplication
+    training:                no cache written
+    JVM:                     Error: non-empty directory '/tmp/aot-poc/unzipped/WEB-INF/classes'
+                             Cannot have non-empty directory in paths
+
+All outcomes match our run.
+
+######## make 06
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), x86_64
+
+== Build
+    before image:            built
+    after image:             built
+    training step:           AOTCache creation is complete: /opt/app/app.aot 57827328 bytes
+    cache file:              /opt/app/app.aot, owner root:root, mode 644
+
+== 1. Production-style JAVA_OPTS, and the cache has to be used (-XX:AOTMode=on)
+    JAVA_OPTS:               -javaagent:/opt/agent/agent.jar=watch=com.example. -Dcom.sun.management -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M -Djdk.nio.maxCachedBufferSize=100000 -Dnetworkaddress.cache.ttl=300 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC
+
+  As built (user 1001)
+    cache:                   used
+    application:             context started
+    classes from cache:      7619 of 7982
+    agent:                   8225 classes already loaded, 1 of them com.example.*
+
+  As an arbitrary user ID in group 0, the way OpenShift runs containers
+    cache:                   used
+    application:             context started
+    classes from cache:      7619 of 7982
+    agent:                   8225 classes already loaded, 1 of them com.example.*
+
+  With -Dcom.sun.management.jmxremote in place of the bare prefix (starts the JMX agent)
+    cache:                   used
+    application:             context started
+    classes from cache:      7619 of 8327
+    agent:                   8225 classes already loaded, 1 of them com.example.*
+
+== 2. What stops the cache being used
+  JAVA_OPTS without -javaagent
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: runtime jdk.management.agent dump time java.instrument,jdk.management.agent
+
+  JAVA_OPTS without -Dcom.sun.management
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: runtime java.instrument dump time java.instrument,jdk.management.agent
+
+  The training step with the production memory options (-XX:CompressedClassSpaceSize=40M)
+    training:                no cache written
+    exit code:               1
+    JVM:                     Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+
+== 3. Startup time: median of 3 runs, 2 CPUs, production-style JAVA_OPTS
+    before: packed WAR, no cache                               4245 ms   (runs: 4268 4099 4245)
+    before, plus a cache trained on the packed WAR             3197 ms   (runs: 3206 3197 3190)
+    after, cache switched off: extracted, no cache             3438 ms   (runs: 3524 3438 3365)
+    after: extracted, with the cache                           2187 ms   (runs: 2187 2148 2190)
+    after, cache rejected: one more --add-opens in JAVA_OPTS   3605 ms   (runs: 3605 3585 3617)
+
+== 4. Compiled code in the cache: JVM defaults
+    AOTAdapterCaching:       false
+    AOTStubCaching:          false
+
+All outcomes match our run.

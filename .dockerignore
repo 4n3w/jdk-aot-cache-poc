@@ -1,0 +1,7 @@
+.git
+results
+**/build
+**/.gradle
+**/README.md
+05-gemfire-client
+06-end-to-end

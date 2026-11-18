@@ -1,0 +1,55 @@
+JDK: Java(TM) SE Runtime Environment (build 25.0.5.0.3+1-LTS-2), aarch64
+
+== Build
+    before image:            built
+    after image:             built
+    training step:           AOTCache creation is complete: /opt/app/app.aot 58064896 bytes
+    cache file:              /opt/app/app.aot, owner root:root, mode 644
+
+== 1. Production-style JAVA_OPTS, and the cache has to be used (-XX:AOTMode=on)
+    JAVA_OPTS:               -javaagent:/opt/agent/agent.jar=watch=com.example. -Dcom.sun.management -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:CompressedClassSpaceSize=40M -XX:MaxDirectMemorySize=100M -XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=240M -Xss512K -Xms999M -Xmx999M -Djdk.nio.maxCachedBufferSize=100000 -Dnetworkaddress.cache.ttl=300 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC
+
+  As built (user 1001)
+    cache:                   used
+    application:             context started
+    classes from cache:      7619 of 7983
+    agent:                   8225 classes already loaded, 1 of them com.example.*
+
+  As an arbitrary user ID in group 0, the way OpenShift runs containers
+    cache:                   used
+    application:             context started
+    classes from cache:      7619 of 7983
+    agent:                   8225 classes already loaded, 1 of them com.example.*
+
+  With -Dcom.sun.management.jmxremote in place of the bare prefix (starts the JMX agent)
+    cache:                   used
+    application:             context started
+    classes from cache:      7619 of 8325
+    agent:                   8225 classes already loaded, 1 of them com.example.*
+
+== 2. What stops the cache being used
+  JAVA_OPTS without -javaagent
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: runtime jdk.management.agent dump time java.instrument,jdk.management.agent
+
+  JAVA_OPTS without -Dcom.sun.management
+    cache:                   rejected
+    JVM:                     Mismatched values for property jdk.module.addmods: runtime java.instrument dump time java.instrument,jdk.management.agent
+
+  The training step with the production memory options (-XX:CompressedClassSpaceSize=40M)
+    training:                no cache written
+    exit code:               1
+    JVM:                     Unable to allocate from 'ro' region: Please reduce the number of shared classes.
+
+== 3. Startup time: median of 5 runs, 2 CPUs, production-style JAVA_OPTS
+    before: packed WAR, no cache                               1062 ms   (runs: 1080 1062 1045 1071 1046)
+    before, plus a cache trained on the packed WAR             805 ms   (runs: 875 828 805 773 767)
+    after, cache switched off: extracted, no cache             870 ms   (runs: 879 904 848 870 863)
+    after: extracted, with the cache                           497 ms   (runs: 499 483 497 498 473)
+    after, cache rejected: one more --add-opens in JAVA_OPTS   879 ms   (runs: 868 881 877 886 879)
+
+== 4. Compiled code in the cache: JVM defaults
+    AOTAdapterCaching:       false
+    AOTStubCaching:          false
+
+All outcomes match our run.
