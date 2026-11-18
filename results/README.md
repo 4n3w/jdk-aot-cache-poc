@@ -1,6 +1,7 @@
 # Results of our run
 
 The unedited output of each test, as printed by `make 01` ... `make 06`.
+[`CONCLUSIONS.md`](CONCLUSIONS.md) summarises what we conclude from it.
 
 | | |
 |---|---|

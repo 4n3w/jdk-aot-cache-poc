@@ -20,7 +20,8 @@ One folder per question:
 | [`05-gemfire-client`](05-gemfire-client/README.md) | Does a GemFire client work with the cache? | Yes. All 2,555 GemFire classes came from the cache, and `ClientCache` and region creation went from 747 ms to 313 ms. Training with no cluster reachable is nearly as good |
 | [`06-end-to-end`](06-end-to-end/README.md) | Does it all hold together in an image build? | Yes. Two extra build steps create the cache, production-style `JAVA_OPTS` use it, and sample-application startup goes from 1,062 ms to 497 ms |
 
-The full output of our run is in [`results/`](results/README.md).
+**Short version:** [`results/CONCLUSIONS.md`](results/CONCLUSIONS.md) has what we conclude and the
+numbers behind it. The full output of our run is in [`results/`](results/README.md).
 
 ## How the tests work
 
